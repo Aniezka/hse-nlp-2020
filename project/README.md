@@ -6,10 +6,10 @@
 Рассмотренная CNN модель состоит из следующих слоёв: Embedding + 2x(Conv1D + GlobalMaxPooling1D) + Concat + Dense.
 
 + В biLSTM.ipynb реализован похожий код из статьи [Yue Zhang, Qi Liu and Linfeng Song. Sentence-State LSTM for Text Representation](https://arxiv.org/pdf/1805.02474v1.pdf). 
-Наша LSTM состоит из 1 слоя эмбеддинга + 2 слоев BiLSTM (размерности 64) + выходной слой. 
+Рассмотренная LSTM модель состоит из следующих слоёв: Embedding + 2xBiLSTM + Dense.
 
 + В cnn_lstm.py находится похожий скрипт из статьи [Jose Camacho-Collados, Mohammad Taher Pilehvar. On the Role of Text Preprocessing in Neural Network Architectures: An Evaluation Study on Text Categorization and Sentiment Analysis](https://arxiv.org/pdf/1707.01780v3.pdf). 
-CNN + LSTM состоит из следующих слоёв: Embedding + Dropout(0.25) + Conv1D + MaxPooling + LSTM + Dense. Рассмотренная LSTM модель состоит из следующих слоёв: Embedding + 2xBiLSTM + Dense.
+CNN + LSTM модель состоит из следующих слоёв: Embedding + Dropout(0.25) + Conv1D + MaxPooling + LSTM + Dense. 
 
 
 Выполнили: Екатерина Махлина, Алина Смирнова, Анна Щербакова.
