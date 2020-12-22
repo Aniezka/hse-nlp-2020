@@ -7,6 +7,8 @@ from keras.layers import Embedding
 from keras.layers import LSTM
 from keras.layers import Conv1D, MaxPooling1D
 from keras.datasets import imdb
+import tensorflow as tf
+
 
 from tensorflow.compat.v1 import ConfigProto
 from tensorflow.compat.v1 import InteractiveSession
@@ -51,6 +53,25 @@ print('x_test shape:', x_test.shape)
 
 print('Build model...')
 
+from keras import backend as K
+
+def recall_m(y_true, y_pred):
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+    possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+    recall = true_positives / (possible_positives + K.epsilon())
+    return recall
+
+def precision_m(y_true, y_pred):
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+    predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+    precision = true_positives / (predicted_positives + K.epsilon())
+    return precision
+
+def f1_m(y_true, y_pred):
+    precision = precision_m(y_true, y_pred)
+    recall = recall_m(y_true, y_pred)
+    return 2*((precision*recall)/(precision+recall+K.epsilon()))
+
 model = Sequential()
 model.add(Embedding(max_features, embedding_size, input_length=maxlen))
 model.add(Dropout(0.25))
@@ -66,13 +87,22 @@ model.add(Activation('sigmoid'))
 
 model.compile(loss='binary_crossentropy',
               optimizer='adam',
-              metrics=['accuracy'])
+              metrics=['acc',f1_m,precision_m, recall_m])
 
 print('Train...')
 model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=epochs,
           validation_data=(x_test, y_test))
+
 score, acc = model.evaluate(x_test, y_test, batch_size=batch_size)
 print('Test score:', score)
 print('Test accuracy:', acc)
+
+loss, accuracy, f1_score, precision, recall = model.evaluate(Xtest, ytest, verbose=0)
+print('Test loss:', loss)
+print('Test accuracy:', accuracy)
+print('Test f1_score:', f1_score)
+print('Test precision:', precision)
+print('Test recall:', recall)
+
